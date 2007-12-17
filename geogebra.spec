@@ -14,7 +14,7 @@ Source11:	%{name}-16x16.png
 Source12:	%{name}-32x32.png
 Source13:	%{name}-48x48.png
 License:	GPL
-BuildRequires:	jdk ImageMagick
+BuildRequires:	java-rpmbuild ImageMagick
 BuildArch:	noarch
 
 %description
