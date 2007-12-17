@@ -43,14 +43,15 @@ java -jar %{_datadir}/%{name}/%{name}.jar \$@
 EOF
 chmod 755 %{buildroot}%{_bindir}/%{name}
 
-mkdir -p %{buildroot}%{_menudir}
-cat << EOF > %{buildroot}%{_menudir}/%{name}
-?package(%{name}):command="%{name}" \
-		icon=%{name}.png \
-		needs="x11" \
-		section="More Applications/Sciences/Mathematics" \
-		title="GeoGebra"\
-		longtitle="%{Summary}"
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications/
+cat << EOF > %buildroot%{_datadir}/applications/mandriva-%{name}.desktop
+[Desktop Entry]
+Type=Application
+Exec=%{name}		
+Icon=%{name}		
+Categories=Science;Math;
+Name=GeoGebra		
+Comment=%{Summary}
 EOF
 
 mkdir -p %{buildroot}{%{_miconsdir},%{_iconsdir},%{_liconsdir}}
@@ -74,5 +75,5 @@ rm -rf %{buildroot}
 %{_iconsdir}/%{name}.png
 %{_liconsdir}/%{name}.png
 %{_miconsdir}/%{name}.png
-%{_menudir}/%{name}
+%{_datadir}/applications/mandriva-%{name}.desktop
 
