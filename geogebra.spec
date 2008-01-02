@@ -16,6 +16,7 @@ Source13:	%{name}-48x48.png
 License:	GPL
 BuildRequires:	java-rpmbuild ImageMagick
 BuildArch:	noarch
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 GeoGebra is a dynamic mathematics software for education in
