@@ -1,6 +1,6 @@
 %define	name	geogebra
 %define	version	2.6a
-%define	release	%mkrel 1
+%define	release	%mkrel 2
 %define	Summary	Interactive software for dynamical mathematics
 
 Name:		%{name}
@@ -13,7 +13,7 @@ Source0:	geogebra_setup.jar
 Source11:	%{name}-16x16.png
 Source12:	%{name}-32x32.png
 Source13:	%{name}-48x48.png
-License:	GPL
+License:	GPLv2+
 BuildRequires:	java-rpmbuild ImageMagick
 BuildArch:	noarch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -51,7 +51,7 @@ Type=Application
 Exec=%{name}		
 Icon=%{name}		
 Categories=Science;Math;
-Name=GeoGebra		
+Name=GeoGebra
 Comment=%{Summary}
 EOF
 
@@ -77,4 +77,3 @@ rm -rf %{buildroot}
 %{_liconsdir}/%{name}.png
 %{_miconsdir}/%{name}.png
 %{_datadir}/applications/mandriva-%{name}.desktop
-
