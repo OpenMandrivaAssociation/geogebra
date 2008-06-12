@@ -60,11 +60,15 @@ convert ../geogebra16.gif -resize 16x16 %{buildroot}%{_miconsdir}/%{name}.png
 convert ../geogebra32.gif -resize 32x32 %{buildroot}%{_iconsdir}/%{name}.png
 convert ../geogebra32.gif -resize 48x48 %{buildroot}%{_liconsdir}/%{name}.png
 
+%if %mdkversion < 200900
 %post
 %{update_menus}
+%endif
 
+%if %mdkversion < 200900
 %postun
 %{clean_menus}
+%endif
 
 %clean
 rm -rf %{buildroot}
