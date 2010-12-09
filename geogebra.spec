@@ -1,6 +1,6 @@
 %define	name	geogebra
 %define	version	2.6a
-%define	release	%mkrel 5
+%define	release	%mkrel 6
 %define	Summary	Interactive software for dynamical mathematics
 
 Name:		%{name}
