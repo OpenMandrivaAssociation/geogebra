@@ -2,7 +2,7 @@ Name:             geogebra
 Summary:          Free mathematics software for learning and teaching
 Version:          3.2.47.0
 Release:          %mkrel 1
-Group:            Productivity/Scientific/Math
+Group:            Sciences/Mathematics
 Url:              http://www.geogebra.org
 License:          GPLv2+ ; CC-BY-SAv3+ ; CC-BY-NC-SAv3+
 Source:           geogebra-%{version}.tar.gz  
@@ -56,6 +56,7 @@ Authors:
 #
 
 %install
+rm -rf %{buildroot}
 %{__install} -d -m755 %{buildroot}%{_datadir}/%{name}
 %{__install} -d -m755 %{buildroot}%{_datadir}/%{name}/unsigned
 %{__install} -m644 *.jar %{buildroot}%{_datadir}/%{name}
@@ -145,13 +146,13 @@ exec \$JAVACMD \$JAVA_OPTS -jar %{_datadir}/%{name}/geogebra.jar \$GG_OPTS "\$@"
 EOF
 %{__chmod} 755 %{buildroot}%{_bindir}/%{name}
 
-%if 0%{?suse_version}
-%suse_update_desktop_file %{name}
-%else
-%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
-desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
-%endif
-%endif
+#%if 0%{?suse_version}
+#%suse_update_desktop_file %{name}
+#%else
+#%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+#desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
+#%endif
+#%endif
 
 %clean
 rm -rf %{buildroot}
