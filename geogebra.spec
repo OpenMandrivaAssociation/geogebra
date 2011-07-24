@@ -1,83 +1,210 @@
-%define	name	geogebra
-%define	version	2.6a
-%define	release	%mkrel 6
-%define	Summary	Interactive software for dynamical mathematics
-
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
-Summary:	%{Summary}
-Group:		Sciences/Mathematics
-URL:		http://www.geogebra.at/
-Source0:	geogebra_setup.jar
-Source11:	%{name}-16x16.png
-Source12:	%{name}-32x32.png
-Source13:	%{name}-48x48.png
-License:	GPLv2+
-BuildRequires:	java-rpmbuild imagemagick
-BuildArch:	noarch
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Name:             geogebra
+Summary:          Free mathematics software for learning and teaching
+Version:          3.2.47.0
+Release:          %mkrel 1
+Group:            Productivity/Scientific/Math
+Url:              http://www.geogebra.org
+License:          GPLv2+ ; CC-BY-SAv3+ ; CC-BY-NC-SAv3+
+Source:           geogebra-%{version}.tar.gz  
+Source1:          %{name}.desktop
+#%if 0%{?suse_version}
+#BuildRequires:    unzip
+#BuildRequires:    update-desktop-files
+#%else
+#%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+#BuildRequires:    unzip
+#BuildRequires:    desktop-file-utils
+#%else
+#BuildRequires:    unzip
+#%endif
+#%endif
+Requires:         java >= 1.5.0
+Requires(post):   shared-mime-info
+Requires(postun): shared-mime-info
+#%if !0%{?fedora} && !0%{?rhel_version} && !0%{?centos_version}
+#Recommends:       java-plugin >= 1.5.0
+#Recommends:       java-sun >= 1.5.0
+#%endif
+BuildArch:        noarch
+BuildRoot:        %{_tmppath}/%{name}-%{version}-build
 
 %description
-GeoGebra is a dynamic mathematics software for education in
-secondary schools that joins geometry, algebra and calculus.
-It received several international awards including the European
-and German educational software awards.
+This package provides GeoGebra.
+
+GeoGebra is free and multi-platform dynamic mathematics software for all levels of education that joins geometry, algebra, tables, graphing, statistics and calculus in one easy-to-use package. It has received several educational software awards in Europe and the USA.
+
+Quick Facts:
+
+- Graphics, algebra and tables are connected and fully dynamic
+- Easy-to-use interface, yet many powerful features 
+- Authoring tool to create interactive learning materials as web pages 
+- Available in many languages for our millions of users around the world 
+- Free and open source software
+
+
+
+Authors:
+--------
+    Markus Hohenwarter (Austria & USA): Project leader since 2001
+    Michael Borcherds (UK): Lead Developer since 2007
+    Yves Kreis (Luxembourg): Developer since 2005
 
 %prep
-jar -x < %{SOURCE0}
-#/usr/src/RPM/SOURCES/geogebra_setup.jar
+%setup -q -n geogebra-%{version}
+
+%build
+#
 
 %install
-rm -rf %{buildroot}
+%{__install} -d -m755 %{buildroot}%{_datadir}/%{name}
+%{__install} -d -m755 %{buildroot}%{_datadir}/%{name}/unsigned
+%{__install} -m644 *.jar %{buildroot}%{_datadir}/%{name}
+%{__install} -m644 unsigned/*.jar %{buildroot}%{_datadir}/%{name}/unsigned
+%{__install} -d -m755 %{buildroot}%{_datadir}/mime/packages
+%{__install} -m644 geogebra.xml %{buildroot}%{_datadir}/mime/packages/%{name}.xml
+%{__install} -d -m755 %{buildroot}%{_datadir}/applications
+%{__install} -m644 %{SOURCE1} %{buildroot}%{_datadir}/applications/
+for SIZE in 16x16 22x22 32x32 48x48 64x64 128x128 256x256; do
+%{__install} -d -m755 %{buildroot}%{_datadir}/icons/hicolor/$SIZE/apps
+%{__install} -d -m755 %{buildroot}%{_datadir}/icons/hicolor/$SIZE/mimetypes
+%{__install} -m644 icons/hicolor/$SIZE/apps/geogebra.png %{buildroot}%{_datadir}/icons/hicolor/$SIZE/apps
+%{__install} -m644 icons/hicolor/$SIZE/mimetypes/application-vnd.geogebra.file.png %{buildroot}%{_datadir}/icons/hicolor/$SIZE/mimetypes
+%{__install} -m644 icons/hicolor/$SIZE/mimetypes/application-vnd.geogebra.tool.png %{buildroot}%{_datadir}/icons/hicolor/$SIZE/mimetypes
+done
+%{__install} -d -m755 %{buildroot}%{_docdir}/%{name}
+%{__install} -m644 license.txt %{buildroot}%{_docdir}/%{name}/COPYING
+%{__install} -d -m755 %{buildroot}%{_bindir}
 
-mkdir -p %{buildroot}%{_datadir}/%{name}
-#mkdir -p %{buildroot}/usr/lib
+# startscript
+cat > %{buildroot}%{_bindir}/%{name} << EOF
+#!/bin/bash
+# simple script to start GeoGebra
+func_usage()
+{
+cat << _USAGE
+Usage: %{name} [Java-options] [GeoGebra-options] [FILE]
 
-cd D_/deploy/source
-cp -a * %{buildroot}/usr/share/%{name}/
+GeoGebra - Dynamic mathematics software
 
-mkdir -p %{buildroot}%{_bindir}
-cat << EOF > %{buildroot}%{_bindir}/%{name}
-#!/bin/sh
-java -jar %{_datadir}/%{name}/%{name}.jar \$@
+Java options:
+  -Xms<size>                       Set initial Java heap size
+  -Xmx<size>                       Set maximum Java heap size
+
+GeoGebra options:
+  --help                           Show this help message
+  --language=<iso_code>            Set language using locale code, e.g. en, de_AT
+  --showAlgebraInput=<boolean>     Show/hide algebra input field
+  --showAlgebraWindow=<boolean>    Show/hide algebra window
+  --showSpreadsheet=<boolean>      Show/hide spreadsheet
+  --fontSize=<number>              Set default font size
+  --showSplash=<boolean>           Enable/disable the splash screen
+  --enableUndo=<boolean>           Enable/disable Undo
+_USAGE
+}
+# prefer jre-sun, if exists
+if [ -z "\$JAVACMD" ]; then
+    if [ -e /etc/alternatives/jre_sun/bin/java ]; then
+        JAVACMD=/etc/alternatives/jre_sun/bin/java
+    else
+        JAVACMD=java
+    fi
+fi
+# check for option --help and pass memory options to Java, others to GeoGebra
+for i in "\$@"; do
+    case "\$i" in
+    --help | --hel | --he | --h )
+        func_usage; exit 0 ;;
+    esac
+    if [ \$(expr match "\$i" '.*-Xm') -ne 0 ]; then
+        if [ -z "\$JAVA_OPTS" ]; then
+            JAVA_OPTS="\$i"
+        else
+            JAVA_OPTS="\$JAVA_OPTS \$i"
+        fi
+        shift \$((1))
+    else
+        if [ \$(expr match "\$i" '.*--') -ne 0 ]; then
+            if [ -z "\$GG_OPTS" ]; then
+                GG_OPTS="\$i"
+            else
+                GG_OPTS="\$GG_OPTS \$i"
+            fi
+            shift \$((1))
+        fi
+    fi
+done
+# if memory not set, change to GeoGebra defaults
+if [ \$(expr match "\$JAVA_OPTS" '.*-Xmx') -eq 0 ]; then
+    JAVA_OPTS="\$JAVA_OPTS -Xmx512m"
+fi
+if [ \$(expr match "\$JAVA_OPTS" '.*-Xms') -eq 0 ]; then
+    JAVA_OPTS="\$JAVA_OPTS -Xms32m"
+fi
+# run
+exec \$JAVACMD \$JAVA_OPTS -jar %{_datadir}/%{name}/geogebra.jar \$GG_OPTS "\$@"
 EOF
-chmod 755 %{buildroot}%{_bindir}/%{name}
+%{__chmod} 755 %{buildroot}%{_bindir}/%{name}
 
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications/
-cat << EOF > %buildroot%{_datadir}/applications/mandriva-%{name}.desktop
-[Desktop Entry]
-Type=Application
-Exec=%{name}		
-Icon=%{name}		
-Categories=Science;Math;
-Name=GeoGebra
-Comment=%{Summary}
-EOF
-
-mkdir -p %{buildroot}{%{_miconsdir},%{_iconsdir},%{_liconsdir}}
-convert ../geogebra16.gif -resize 16x16 %{buildroot}%{_miconsdir}/%{name}.png
-convert ../geogebra32.gif -resize 32x32 %{buildroot}%{_iconsdir}/%{name}.png
-convert ../geogebra32.gif -resize 48x48 %{buildroot}%{_liconsdir}/%{name}.png
-
-%if %mdkversion < 200900
-%post
-%{update_menus}
+%if 0%{?suse_version}
+%suse_update_desktop_file %{name}
+%else
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
+desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 %endif
-
-%if %mdkversion < 200900
-%postun
-%{clean_menus}
 %endif
 
 %clean
 rm -rf %{buildroot}
 
+%post
+%if 0%{?mandriva_version}
+%{update_menus}
+%update_desktop_database
+%update_mime_database
+%update_icon_cache hicolor
+%else
+%{_bindir}/update-mime-database %{_datadir}/mime >/dev/null
+%endif
+
+%postun
+%if 0%{?mandriva_version}
+%{clean_menus}
+%clean_desktop_database
+%clean_mime_database
+%update_icon_cache hicolor
+%else
+%{_bindir}/update-mime-database %{_datadir}/mime >/dev/null
+%endif
+
 %files
 %defattr(-,root,root)
-%{_bindir}/%{name}
+%dir %{_datadir}/icons/hicolor
+%dir %{_datadir}/icons/hicolor/16x16
+%dir %{_datadir}/icons/hicolor/22x22
+%dir %{_datadir}/icons/hicolor/32x32
+%dir %{_datadir}/icons/hicolor/48x48
+%dir %{_datadir}/icons/hicolor/64x64
+%dir %{_datadir}/icons/hicolor/128x128
+%dir %{_datadir}/icons/hicolor/256x256
+%dir %{_datadir}/icons/hicolor/16x16/apps
+%dir %{_datadir}/icons/hicolor/16x16/mimetypes
+%dir %{_datadir}/icons/hicolor/22x22/apps
+%dir %{_datadir}/icons/hicolor/22x22/mimetypes
+%dir %{_datadir}/icons/hicolor/32x32/apps
+%dir %{_datadir}/icons/hicolor/32x32/mimetypes
+%dir %{_datadir}/icons/hicolor/48x48/apps
+%dir %{_datadir}/icons/hicolor/48x48/mimetypes
+%dir %{_datadir}/icons/hicolor/64x64/apps
+%dir %{_datadir}/icons/hicolor/64x64/mimetypes
+%dir %{_datadir}/icons/hicolor/128x128/apps
+%dir %{_datadir}/icons/hicolor/128x128/mimetypes
+%dir %{_datadir}/icons/hicolor/256x256/apps
+%dir %{_datadir}/icons/hicolor/256x256/mimetypes
+%{_docdir}/%{name}
 %{_datadir}/%{name}
-%{_iconsdir}/%{name}.png
-%{_liconsdir}/%{name}.png
-%{_miconsdir}/%{name}.png
-%{_datadir}/applications/mandriva-%{name}.desktop
+%{_datadir}/mime/packages/%{name}.xml
+%{_bindir}/%{name}
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/*/*/*.png
+
+%changelog
