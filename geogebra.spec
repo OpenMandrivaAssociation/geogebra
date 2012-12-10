@@ -208,4 +208,46 @@ rm -rf %{buildroot}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/*/*.png
 
+
+
 %changelog
+* Sun Jul 24 2011 Sergey Zhemoitel <serg@mandriva.org> 3.2.47.0-1mdv2012.0
++ Revision: 691470
+- fix build
+- new version 3.2.47.0
+
+* Thu Dec 09 2010 Oden Eriksson <oeriksson@mandriva.com> 2.6a-6mdv2011.0
++ Revision: 618449
+- the mass rebuild of 2010.0 packages
+
+* Fri Sep 04 2009 Thierry Vignaud <tv@mandriva.org> 2.6a-5mdv2010.0
++ Revision: 429191
+- rebuild
+
+  + Oden Eriksson <oeriksson@mandriva.com>
+    - lowercase ImageMagick
+
+* Thu Jul 24 2008 Thierry Vignaud <tv@mandriva.org> 2.6a-4mdv2009.0
++ Revision: 245882
+- rebuild
+
+  + Pixel <pixel@mandriva.com>
+    - rpm filetriggers deprecates update_menus/update_scrollkeeper/update_mime_database/update_icon_cache/update_desktop_database/post_install_gconf_schemas
+
+* Fri Jan 25 2008 Funda Wang <fwang@mandriva.org> 2.6a-2mdv2008.1
++ Revision: 157781
+- fix desktop entry
+
+  + Olivier Blin <oblin@mandriva.com>
+    - restore BuildRoot
+
+* Mon Dec 17 2007 Thierry Vignaud <tv@mandriva.org> 2.6a-1mdv2008.1
++ Revision: 131552
+- auto-convert XDG menu entry
+- BR java-rpmbuild instead of jdk
+- kill re-definition of %%buildroot on Pixel's request
+- import geogebra
+
+
+* Thu May 04 2006 Per Øyvind Karlsen <pkarlsen@mandriva.com> 2.6a-1mdk
+- initial release
