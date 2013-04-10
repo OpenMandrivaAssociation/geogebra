@@ -31,7 +31,10 @@ BuildRoot:        %{_tmppath}/%{name}-%{version}-build
 %description
 This package provides GeoGebra.
 
-GeoGebra is free and multi-platform dynamic mathematics software for all levels of education that joins geometry, algebra, tables, graphing, statistics and calculus in one easy-to-use package. It has received several educational software awards in Europe and the USA.
+GeoGebra is free and multi-platform dynamic mathematics software for all
+levels of education that joins geometry, algebra, tables, graphing, statistics
+and calculus in one easy-to-use package. It has received several educational
+software awards in Europe and the USA.
 
 Quick Facts:
 
