@@ -1,32 +1,16 @@
 Name:             geogebra
 Summary:          Free mathematics software for learning and teaching
 Version:          3.2.47.0
-Release:          %mkrel 1
+Release:          2
 Group:            Sciences/Mathematics
 Url:              http://www.geogebra.org
 License:          GPLv2+ ; CC-BY-SAv3+ ; CC-BY-NC-SAv3+
 Source:           geogebra-%{version}.tar.gz  
 Source1:          %{name}.desktop
-#%if 0%{?suse_version}
-#BuildRequires:    unzip
-#BuildRequires:    update-desktop-files
-#%else
-#%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
-#BuildRequires:    unzip
-#BuildRequires:    desktop-file-utils
-#%else
-#BuildRequires:    unzip
-#%endif
-#%endif
 Requires:         java >= 1.5.0
 Requires(post):   shared-mime-info
 Requires(postun): shared-mime-info
-#%if !0%{?fedora} && !0%{?rhel_version} && !0%{?centos_version}
-#Recommends:       java-plugin >= 1.5.0
-#Recommends:       java-sun >= 1.5.0
-#%endif
 BuildArch:        noarch
-BuildRoot:        %{_tmppath}/%{name}-%{version}-build
 
 %description
 This package provides GeoGebra.
@@ -59,7 +43,6 @@ Authors:
 #
 
 %install
-rm -rf %{buildroot}
 %{__install} -d -m755 %{buildroot}%{_datadir}/%{name}
 %{__install} -d -m755 %{buildroot}%{_datadir}/%{name}/unsigned
 %{__install} -m644 *.jar %{buildroot}%{_datadir}/%{name}
