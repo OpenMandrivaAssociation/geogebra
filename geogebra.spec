@@ -1,7 +1,7 @@
 Name:             geogebra
 Summary:          Free mathematics software for learning and teaching
 Version:          3.2.47.0
-Release:          2
+Release:          3
 Group:            Sciences/Mathematics
 Url:              http://www.geogebra.org
 License:          GPLv2+ ; CC-BY-SAv3+ ; CC-BY-NC-SAv3+
